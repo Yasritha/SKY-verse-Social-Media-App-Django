@@ -29,3 +29,5 @@ Anusha
 password:  new_password
 ##reset the password using django shell(python manage.py shell
 )if needed
+![Screenshot 1](screenshots/screenshot1.png)
+![Screenshot 2](screenshots/screenshot2.png)
