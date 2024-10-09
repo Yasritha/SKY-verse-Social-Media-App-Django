@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | SKYverse</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-image: url('/static/images/background.jpeg'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Adjust to center vertically */
+            margin: 0;
+            text-align: center;
+            overflow: hidden; /* Ensure the image doesn't overflow */
+        }
+        .registration-form {
+            max-width: 500px; /* Increased width for a larger form */
+            padding: 40px; /* Increased padding for more space */
+            background-color: rgba(255, 255, 255, 0.964); /* Semi-transparent white background */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left; /* Align text to the left within the form */
+        }
+        .form-control {
+            width: 100%;
+            margin-bottom: 15px; /* Increased margin bottom for spacing between inputs */
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: #3897f0;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 15px; /* Increased margin top for spacing between button and inputs */
+        }
+        .btn:hover {
+            background-color: #357ae8;
+        }
+        .sign-in-link {
+            margin-top: 10px; /* Margin above sign-in link */
+            font-size: 14px;
+            color: #003569;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .form-group {
+            position: relative;
+        }
+        .form-group input[type="password"] {
+            padding-right: 40px; /* Space for the eye icon */
+        }
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            padding-top: 25px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-form">
+        <h2>Sign Up for SKYverse</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.email.id_for_label }}">Email:</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="alert alert-danger">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}">Username:</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="alert alert-danger">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password1.id_for_label }}">Password:</label>
+                {{ form.password1 }}
+                <span class="eye-icon" onclick="togglePasswordVisibility('id_password1')">
+                    <i class="fas fa-eye" id="togglePassword1"></i>
+                </span>
+                {% if form.password1.errors %}
+                    <div class="alert alert-danger">{{ form.password1.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.password2.id_for_label }}">Confirm Password:</label>
+                {{ form.password2 }}
+                <span class="eye-icon" onclick="togglePasswordVisibility('id_password2')">
+                    <i class="fas fa-eye" id="togglePassword2"></i>
+                </span>
+                {% if form.password2.errors %}
+                    <div class="alert alert-danger">{{ form.password2.errors }}</div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn">Sign Up</button>
+        </form>
+        <h4>Already have an account?<a href="{% url 'login' %}" class="sign-in-link">Sign in</a></h4>
+    </div>
+    <script>
+        function togglePasswordVisibility(id) {
+            var input = document.getElementById(id);
+            var eyeIcon = document.getElementById('toggle' + id.charAt(id.length - 1));
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>

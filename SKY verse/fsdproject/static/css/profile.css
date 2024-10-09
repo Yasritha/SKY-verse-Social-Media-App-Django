@@ -1,0 +1,52 @@
+/* Styles for Profile Page */
+
+/* Profile Photo */
+.profile-photo img {
+    width: 150px; /* Adjust as needed */
+    height: 150px; /* Adjust as needed */
+    border-radius: 50%; /* Make it circular */
+    object-fit: cover; /* Ensure the photo covers the entire area */
+    object-position: center; /* Center the image within its container */
+    margin-bottom: 20px; /* Space below the photo */
+}
+
+/* User Information */
+.profile-info h2 {
+    margin-bottom: 10px; /* Space below the username */
+    font-size: 24px; /* Adjust font size as needed */
+    color: #333; /* Text color */
+}
+
+.profile-info p {
+    font-size: 16px; /* Adjust font size as needed */
+    color: #666; /* Text color */
+    line-height: 1.5; /* Line spacing */
+    margin-bottom: 20px; /* Space below the bio */
+}
+
+/* Posts Section */
+.profile-posts .card {
+    margin-bottom: 15px; /* Space between posts */
+    border: 1px solid #ddd; /* Example border */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for cards */
+    background-color: #fff; /* Background color */
+}
+
+.profile-posts .card-body {
+    padding: 15px; /* Padding inside the card body */
+}
+
+.profile-posts .card p {
+    font-size: 14px; /* Adjust font size for post content */
+    color: #333; /* Text color */
+    line-height: 1.5; /* Line spacing */
+}
+
+/* Media Queries for Responsiveness (optional) */
+@media (max-width: 768px) {
+    .profile-photo img {
+        width: 120px; /* Adjust size for smaller screens */
+        height: 120px; /* Adjust size for smaller screens */
+    }
+}
