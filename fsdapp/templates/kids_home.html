@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kids Home | SKYverse</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/kids_home.css"> <!-- Add your custom CSS if needed -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome CSS -->
+    <style>
+        .nav-icon {
+            font-size: 20px; /* Increase icon size */
+        }
+        .toggle-mode-icon {
+            font-size: 24px;
+            color: #333;
+            cursor: pointer;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+        .toggle-mode-icon.hide {
+            display: none; /* Hide the toggle icon initially */
+        }
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand" href="#">SKYverse</a>
+                <!-- No other options or links in kids mode header -->
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="posts-grid">
+                {% for post in kids_posts %}
+                <div class="post">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="post-header">
+                                <img src="{{ post.author.profile.profile_photo.url }}" alt="Profile Picture" class="profile-img">
+                                <h5 class="card-title">{{ post.author.username }}</h5>
+                            </div>
+                            <p>{{ post.content }}</p>
+                            {% if post.image %}
+                                <img src="{{ post.image.url }}" alt="Post Image" class="img-fluid">
+                            {% elif post.video %}
+                                <video controls class="img-fluid">
+                                    <source src="{{ post.video.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% endif %}
+                            <p class="text-muted">Posted on: {{ post.created_at }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No kids-related posts available.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript to show toggle mode icon on swipe -->
+    <script>
+        // Function to show toggle mode icon on swipe
+        document.addEventListener('DOMContentLoaded', function () {
+            var startX = null;
+            var startY = null;
+
+            // Event listener for touchstart
+            document.addEventListener('touchstart', function (event) {
+                startX = event.touches[0].clientX;
+                startY = event.touches[0].clientY;
+            });
+
+            // Event listener for touchmove
+            document.addEventListener('touchmove', function (event) {
+                var currentX = event.touches[0].clientX;
+                var currentY = event.touches[0].clientY;
+
+                // Swipe right detection
+                if (startX && startY && (currentX - startX > 50) && Math.abs(currentY - startY) < 50) {
+                    // Show toggle mode icon
+                    document.querySelector('.toggle-mode-icon').classList.remove('hide');
+                }
+            });
+        });
+
+        // JavaScript for handling toggle icon appearance
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggleIcon = document.getElementById('toggleIcon');
+            var startX;
+            var distance = 200; // Swipe distance threshold (twice the original distance)
+            var iconShown = false; // Flag to track if icon is shown
+
+            // Function to handle touch start
+            function handleTouchStart(e) {
+                startX = e.touches[0].clientX;
+            }
+
+            // Function to handle touch move
+            function handleTouchMove(e) {
+                if (e.touches[0].clientX < startX - distance && !iconShown) {
+                    toggleIcon.style.display = 'block';
+                    iconShown = true; // Set flag to true once icon is shown
+                }
+            }
+
+            // Function to handle touch end (redirect to regular mode)
+            function switchToRegularMode() {
+                window.location.href = "{% url 'home' %}";
+            }
+
+            // Attach touch event listeners
+            document.addEventListener('touchstart', handleTouchStart);
+            document.addEventListener('touchmove', handleTouchMove);
+        });
+    </script>
+
+    <!-- Bootstrap JS and Font Awesome -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

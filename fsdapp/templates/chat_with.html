@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with {{ friend.username }} | SKYverse</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .chat-container {
+            display: flex;
+            height: 100vh;
+        }
+        .friends-list {
+            width: 25%;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+        .chat-section {
+            width: 75%;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .chat-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fff;
+        }
+        .chat-input {
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .message.sent {
+            text-align: right;
+        }
+        .message .message-content {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #f1f1f1;
+        }
+        .message.sent .message-content {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .profile-photo {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+        .list-group-item {
+            display: flex;
+            align-items: center;
+        }
+        .home-button {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Friends List -->
+        <div class="friends-list">
+            <a href="{% url 'home' %}" class="btn btn-primary home-button">Home</a>
+            <h3 class="text-center">Friends</h3>
+            <div class="list-group">
+                {% for friend in friends %}
+                <a href="{% url 'chat_with' friend.id %}" Chat with {{ friend.username }}
+                class="list-group-item list-group-item-action d-flex align-items-center">
+                        {% if friend.user.profile.profile_photo %}
+                            <img src="{{ friend.user.profile.profile_photo.url }}" alt="Profile Photo" class="profile-photo">
+                        {% else %}
+                            <img src="/media/profile_photos/default_profile.jpg" alt="Default Profile Photo" class="profile-photo">
+                        {% endif %}
+                        <span>{{ friend.user.username }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <div class="chat-header">
+                {% if friend.profile.profile_photo %}
+                    <img src="{{ friend.profile.profile_photo.url }}" alt="Profile Photo">
+                {% else %}
+                    <img src="/media/profile_photos/default_profile.jpg" alt="Default Profile Photo">
+                {% endif %}
+                <span>{{ friend.username }}</span>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                {% for message in messages %}
+                    <div class="message {% if message.sender == user %}sent{% endif %}">
+                        <div class="message-content">{{ message.content }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="chat-input">
+                <form id="messageForm">
+                    <input type="text" id="message" class="form-control" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit" class="btn btn-primary mt-2">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat/{{ friend.username }}/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if (data.message) {
+                const chatMessages = document.getElementById('chatMessages');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', data.sender === '{{ user.username }}' ? 'sent' : '');
+                messageElement.innerHTML = '<div class="message-content">' + data.message + '</div>';
+                chatMessages.appendChild(messageElement);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.getElementById('messageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const messageInput = document.getElementById('message');
+            const message = messageInput.value;
+            if (message.trim() !== '') {
+                chatSocket.send(JSON.stringify({
+                    'message': message
+                }));
+                messageInput.value = '';
+            }
+        });
+    </script>
+</body>
+</html>
