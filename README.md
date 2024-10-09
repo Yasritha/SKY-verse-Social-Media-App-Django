@@ -1,4 +1,4 @@
-# SKY-verse-Social-Media-Appl-Django# SKYverse-SocialApp
+# SKY-verse-Social-Media-App-Django# SKYverse-SocialApp
 
 **SKYverse** is a feature-rich social media platform built using Django. It allows users to create and view posts across various categories, and has a partially implemented chat feature along with a kids-friendly mode.
 
