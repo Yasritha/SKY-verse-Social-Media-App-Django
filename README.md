@@ -13,3 +13,19 @@
 ## Technologies Used
 - Django (Python)
 - SQLite (default Django database)
+## user names and passwords
+****usernames:
+Suma
+sai_yasritha
+Neha
+Karthik
+Keerthi_093
+Chandu
+Nikesh_Arora
+TV_19
+Shriyan
+Anusha
+..**
+password:  new_password
+##reset the password using django shell(python manage.py shell
+)if needed
